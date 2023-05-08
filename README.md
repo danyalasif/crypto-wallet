@@ -1,12 +1,14 @@
-# Expo Router Example
+# Expo Router with TypeScript Example
 
-Use [`expo-router`](https://expo.github.io/router) to build native navigation using files in the `app/` directory.
+Expo-cli doesn't let you add typescript and router at same time and it takes extra time to set up either of them.
 
-## 🚀 How to use
+This repo includes the new file based router and typescript.
 
-```sh
-npx create-react-native-app -t with-router
-```
+Full list of things configured:
+
+- Expo Router
+- TypeScript
+- Prettier
 
 ## 📝 Notes
 
