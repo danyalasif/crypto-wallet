@@ -10,6 +10,13 @@ Full list of things configured:
 - TypeScript
 - Prettier
 
+## How to use
+
+1. Clone the repo, name it your app
+2. Replace `with-router-typescript` in all places with the name of your app
+   `app.json` > name, slug
+   `package.json` > name
+
 ## 📝 Notes
 
 - [Expo Router: Docs](https://expo.github.io/router)
