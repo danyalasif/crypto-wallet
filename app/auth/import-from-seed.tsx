@@ -11,6 +11,7 @@ import {
   HStack,
   Switch,
   ScrollView,
+  useTheme,
 } from "native-base";
 import { useState } from "react";
 import { Animated } from "react-native";
@@ -18,6 +19,7 @@ import { CustomInput } from "./components/input";
 
 export default function ImportFromSeed() {
   const router = useRouter();
+  const { colors } = useTheme();
   const [seedPhrase, setSeedPhrase] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,7 +31,7 @@ export default function ImportFromSeed() {
   };
 
   return (
-    <Box safeArea flex={1} p={2} backgroundColor={"#080A0C"}>
+    <Box safeArea flex={1} p={2} backgroundColor={"gray.24"}>
       <Stack.Screen
         options={{
           headerShown: true,
@@ -39,7 +41,7 @@ export default function ImportFromSeed() {
             color: "white",
           },
           headerStyle: {
-            backgroundColor: "#080A0C",
+            backgroundColor: colors.gray[24],
           },
           headerBackTitle: "Back",
         }}

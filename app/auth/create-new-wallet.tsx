@@ -19,16 +19,24 @@ import {
   Row,
   Heading,
   Progress,
+  useTheme,
 } from "native-base";
 import { useRef, useState } from "react";
 import { Animated, View } from "react-native";
 import { CustomInput } from "./components/input";
 import PagerView from "react-native-pager-view";
+import { BlurView } from "expo-blur";
+import GradientButton from "../../ui/GradientButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { fromCSS } from "@bacons/css-to-expo-linear-gradient";
+import MaskedView from "@react-native-masked-view/masked-view";
+import GradientText from "../../ui/GradientText";
+import React from "react";
 
-const TOTAL_PAGES = 5;
+const TOTAL_PAGES = 6;
 
 const HeaderProgress = ({ currentProgress, totalProgress }) => {
-  const doneColor = "#3D8DFF";
+  const doneColor = "primary.5";
   const notDoneColor = "#202832";
 
   return (
@@ -37,7 +45,7 @@ const HeaderProgress = ({ currentProgress, totalProgress }) => {
         .fill(1)
         .map((_, i) => {
           return (
-            <>
+            <React.Fragment key={i}>
               {i == 0 ? (
                 <Circle
                   size={2}
@@ -53,7 +61,7 @@ const HeaderProgress = ({ currentProgress, totalProgress }) => {
                 size={2}
                 bg={currentProgress > i + 1 ? doneColor : notDoneColor}
               />
-            </>
+            </React.Fragment>
           );
         })}
     </HStack>
@@ -62,6 +70,7 @@ const HeaderProgress = ({ currentProgress, totalProgress }) => {
 
 export default function CreateNewWallet() {
   const router = useRouter();
+  const { colors } = useTheme();
   const [seedPhrase, setSeedPhrase] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -91,7 +100,7 @@ export default function CreateNewWallet() {
               alignItems="center"
               px={4}
               py={4}
-              backgroundColor={"#080A0C"}
+              backgroundColor={"gray.24"}
               safeArea
             >
               <ArrowBackIcon mr={16} />
@@ -106,7 +115,7 @@ export default function CreateNewWallet() {
             color: "white",
           },
           headerStyle: {
-            backgroundColor: "#080A0C",
+            backgroundColor: colors.gray[24],
           },
           headerBackTitle: "Back",
         }}
@@ -116,7 +125,7 @@ export default function CreateNewWallet() {
         initialPage={0}
         style={{
           flex: 1,
-          backgroundColor: "#080A0C",
+          backgroundColor: colors.gray[24],
         }}
         orientation="horizontal"
         onPageSelected={handlePageSelected}
@@ -166,7 +175,7 @@ export default function CreateNewWallet() {
               <Switch
                 isChecked={isFaceIdEnabled}
                 onToggle={setFaceIdEnabled}
-                onTrackColor={"#3D8DFF"}
+                onTrackColor={"primary.5"}
               />
             </HStack>
             <HStack space={6}>
@@ -229,21 +238,21 @@ export default function CreateNewWallet() {
           <Button variant={"link"} color={"#5F97FF"} mt={2}>
             Remind me later
           </Button>
-
-          <Button
-            onPress={onSubmit}
-            borderRadius={80}
-            padding={2}
-            mt={8}
-            width={"100%"}
-            bgColor={"#FF56A9"}
-            _text={{
-              fontSize: "16px",
-              fontWeight: "bold",
-            }}
-          >
-            Start
-          </Button>
+          <Box width={"100%"}>
+            <GradientButton
+              cssGradient="linear-gradient(135deg, #8AD4EC 0%, #EF96FF 21.74%, #FF56A9 54.03%, #FFAA6C 85.28%)"
+              buttonProps={{
+                onPress: () => {},
+                _text: {
+                  color: "white",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                },
+              }}
+            >
+              Start
+            </GradientButton>
+          </Box>
         </Box>
 
         <Box key="3" p={4} justifyContent={"space-between"}>
@@ -274,25 +283,24 @@ export default function CreateNewWallet() {
           </Text>
           <HStack space={2}>
             <Progress
-              _filledTrack={{ bg: "#76E268" }}
+              _filledTrack={{ bg: "green.5" }}
               size="xs"
               value={100}
               w={"15%"}
             />
             <Progress
-              _filledTrack={{ bg: "#76E268" }}
+              _filledTrack={{ bg: "green.5" }}
               size="xs"
               value={100}
               w={"15%"}
             />
             <Progress
-              _filledTrack={{ bg: "#76E268" }}
+              _filledTrack={{ bg: "green.5" }}
               size="xs"
               value={100}
               w={"15%"}
             />
           </HStack>
-
           <Text mt={4} color={"white"}>
             Risks are: {"\n"}• You lose it {"\n"}• You forget where you put it{" "}
             {"\n"}• Someone else finds it
@@ -301,20 +309,19 @@ export default function CreateNewWallet() {
             Tips: {"\n"}• Store in bank vault {"\n"}• Store in a safe {"\n"}•
             Store in multiple secret places
           </Text>
-          <Button
-            onPress={onSubmit}
-            borderRadius={80}
-            padding={2}
-            mt={8}
-            width={"100%"}
-            bgColor={"#FF56A9"}
-            _text={{
-              fontSize: "16px",
-              fontWeight: "bold",
+          <GradientButton
+            cssGradient="linear-gradient(135deg, #8AD4EC 0%, #EF96FF 21.74%, #FF56A9 54.03%, #FFAA6C 85.28%)"
+            buttonProps={{
+              onPress: () => {},
+              _text: {
+                color: "white",
+                fontSize: "16px",
+                fontWeight: "bold",
+              },
             }}
           >
             Next
-          </Button>
+          </GradientButton>
         </Box>
 
         <Box key="4" p={4}>
@@ -331,26 +338,188 @@ export default function CreateNewWallet() {
             safe place. You'll be asked to re-enter this phrase (in order) on
             the next step.
           </Text>
-          <Box flex={1} alignItems="center" justifyContent="center">
-            <Box
-              width={"100%"}
+          <Box
+            alignItems={"center"}
+            justifyContent={"center"}
+            position={"relative"}
+            top={50}
+          >
+            {isBlurred ? (
+              <Image
+                resizeMode="cover"
+                source={require("../../images/blurry-rect.png")}
+                borderRadius={2}
+                position={"absolute"}
+                zIndex={isBlurred ? 1 : 0}
+                height={300}
+                alt={"Blur"}
+                opacity={0.8}
+                w={"95%"}
+              />
+            ) : null}
+            {isBlurred ? (
+              <Button
+                onPress={() => setIsBlurred(!isBlurred)}
+                zIndex={2}
+                position={"absolute"}
+              >
+                View
+              </Button>
+            ) : null}
+            <Text
+              color={"white"}
+              fontSize={"18px"}
+              opacity={isBlurred ? 0.05 : 1}
               height={300}
-              alignItems="center"
-              justifyContent="center"
-              bg={isBlurred ? "rgba(255, 255, 255, 0.8)" : "transparent"}
             >
-              <Text mt={4} color={"white"} fontSize={"16px"}>
-                Your seed phrase
-              </Text>
-              {true && (
-                <Button
-                  onPress={() => setIsBlurred(!isBlurred)}
-                  position="absolute"
+              This is your seed phrase. Write it down on a paper and keep it in
+              a safe place. You'll be asked to re-enter this phrase (in order)
+              on the next step.
+            </Text>
+          </Box>
+          <Box width={"100%"} mt={"auto"}>
+            <GradientButton
+              cssGradient="linear-gradient(135deg, #8AD4EC 0%, #EF96FF 21.74%, #FF56A9 54.03%, #FFAA6C 85.28%)"
+              buttonProps={{
+                onPress: () => {},
+                _text: {
+                  color: "white",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                },
+              }}
+            >
+              Next
+            </GradientButton>
+          </Box>
+        </Box>
+        <Box key="5" p={4} alignItems={"center"}>
+          <Heading
+            color={"white"}
+            fontSize={"18px"}
+            fontWeight={"bold"}
+            textAlign={"center"}
+          >
+            Confirm Seed Phrase
+          </Heading>
+          <Text
+            mt={4}
+            color={"white"}
+            fontSize={"14px"}
+            w={"60%"}
+            textAlign={"center"}
+          >
+            Select each word in the order it was presented to you
+          </Text>
+
+          <Text fontSize={"40px"} color={"#6A84A0"} mt={32}>
+            1.
+          </Text>
+
+          <HStack space={2} mt={"auto"}>
+            <Progress
+              _filledTrack={{ bg: "primary.5" }}
+              size="xs"
+              value={100}
+              w={"15%"}
+            />
+            <Progress
+              _filledTrack={{ bg: "primary.5" }}
+              size="xs"
+              value={100}
+              w={"15%"}
+            />
+            <Progress
+              _filledTrack={{ bg: "primary.5" }}
+              size="xs"
+              value={100}
+              w={"15%"}
+            />
+          </HStack>
+
+          <HStack
+            flexWrap={"wrap"}
+            borderColor={"#17171A"}
+            borderWidth={1}
+            borderRadius={8}
+            p={3}
+            alignItems={"center"}
+            justifyContent={"center"}
+            alignContent={"center"}
+            mt={"auto"}
+            width={"95%"}
+          >
+            {["future", "frequent", "target", "abuse", "organ", "bubble"].map(
+              (word, i) => (
+                <Box
+                  key={i}
+                  borderWidth={1}
+                  borderRadius={8}
+                  bgColor={"#181E25"}
+                  px={4}
+                  py={2}
+                  mb={4}
+                  ml={4}
                 >
-                  View
-                </Button>
-              )}
-            </Box>
+                  <Text key={i} color={"white"}>
+                    {word}
+                  </Text>
+                </Box>
+              )
+            )}
+          </HStack>
+        </Box>
+
+        <Box key="6" p={4} alignItems={"center"}>
+          <Image
+            source={require("../../images/success.png")}
+            alt="property"
+            style={{
+              height: 300,
+              width: 300,
+            }}
+          />
+          <GradientText
+            maskElement={
+              <Heading
+                color={"white"}
+                fontSize={"40px"}
+                fontWeight={"bold"}
+                textAlign={"center"}
+                bgColor={"transparent"}
+              >
+                Success!
+              </Heading>
+            }
+            cssGradient="linear-gradient(135deg, #70A2FF 0%, #54F0D1 100%)"
+          />
+          <Heading
+            color={"white"}
+            fontSize={"40px"}
+            fontWeight={"bold"}
+            textAlign={"center"}
+            bgColor={"transparent"}
+          >
+            Success!
+          </Heading>
+          <Text mt={4} color={"white"} textAlign={"center"}>
+            You've successfully protected your wallet. Remember to keep your
+            seed phrase safe, it's your responsibility!
+          </Text>
+          <Box width={"100%"} mt={"auto"}>
+            <GradientButton
+              cssGradient="linear-gradient(135deg, #8AD4EC 0%, #EF96FF 21.74%, #FF56A9 54.03%, #FFAA6C 85.28%)"
+              buttonProps={{
+                onPress: () => {},
+                _text: {
+                  color: "white",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                },
+              }}
+            >
+              Next
+            </GradientButton>
           </Box>
         </Box>
       </PagerView>

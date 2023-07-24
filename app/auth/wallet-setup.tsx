@@ -6,13 +6,11 @@ export default function WalletSetup() {
 
   return (
     <Box
-      style={{
-        padding: 32,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#080A0C",
-        flex: 1,
-      }}
+      p={4}
+      alignItems={"center"}
+      justifyContent={"center"}
+      backgroundColor={"gray.24"}
+      flex={1}
     >
       <Image
         source={require("../../images/wallet.png")}

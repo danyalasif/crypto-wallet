@@ -43,7 +43,7 @@ export default function Home() {
 
     setAccountInfo(account1);
   };
-  return <Redirect href="/onboarding" />;
+  return <Redirect href="/dashboard" />;
   return (
     <SafeAreaView
       style={{ padding: 32, justifyContent: "space-between", height: 600 }}

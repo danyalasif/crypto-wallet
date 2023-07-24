@@ -47,12 +47,7 @@ export default function Index() {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: "#080A0C",
-        flex: 1,
-      }}
-    >
+    <Box safeArea background={"gray.24"} flex={1}>
       <PagerView
         ref={pagerRef}
         initialPage={0}
@@ -163,6 +158,6 @@ export default function Index() {
       >
         Get Started
       </Button>
-    </SafeAreaView>
+    </Box>
   );
 }
