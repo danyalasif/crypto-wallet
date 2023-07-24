@@ -4,7 +4,7 @@
     "web": {
       "bundler": "metro"
     },
-    "name": "with-router-typescript",
-    "slug": "with-router-typescript"
+    "name": "crypto-wallet",
+    "slug": "crypto-wallet"
   }
 }
