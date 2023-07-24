@@ -1,29 +1,45 @@
 import { Stack } from "expo-router/stack";
-import { SplashScreen } from "expo-router";
+import { Slot, SplashScreen } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-gesture-handler";
 import { NativeBaseProvider, extendTheme } from "native-base";
 
 const newColorTheme = {
-  button: {
-    "Gray/21": "#202832",
+  primary: {
+    "1": "#D8EEFF",
+    "2": "#B1DBFF",
+    "3": "#8AC4FF",
+    "4": "#6DAFFF",
+    "5": "#3D8DFF",
+    "6": "#2C6DDB",
+    "7": "#1E50B7",
+    "8": "#133893",
   },
-  brand: {
-    900: "#8287af",
-    800: "#7c83db",
-    700: "#b3bef6",
+  green: {
+    "1": "#EEFDE2",
+    "2": "#D8FCC5",
+    "3": "#BCF6A6",
+    "4": "#A0ED8D",
+    "5": "#76E268",
+  },
+  gray: {
+    24: "#080A0C",
   },
 };
+
+const config = {
+  dependencies: {
+    "linear-gradient": require("expo-linear-gradient").default,
+  },
+};
+
 const theme = extendTheme({ colors: newColorTheme });
 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <NativeBaseProvider theme={theme}>
-        <Stack
-          screenOptions={{ headerShown: false }}
-          initialRouteName="onboarding"
-        />
+      <NativeBaseProvider theme={theme} config={config} isSSR={false}>
+        <Slot />
       </NativeBaseProvider>
     </GestureHandlerRootView>
   );
