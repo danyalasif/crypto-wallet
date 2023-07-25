@@ -16,6 +16,20 @@ const GradientButton = ({
   cssGradient,
   buttonProps,
 }: GradientButtonProps) => {
+  if (!cssGradient) {
+    return (
+      <Button
+        bg={"transparent"}
+        width={"100%"}
+        borderRadius={80}
+        _pressed={{ bgColor: "primary.1" }}
+        variant="unstyled"
+        {...buttonProps}
+      >
+        {children}
+      </Button>
+    );
+  }
   return (
     <LinearGradient
       // Button Linear Gradient
