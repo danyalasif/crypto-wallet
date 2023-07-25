@@ -10,7 +10,7 @@ export default function Swap() {
   const inputRef = useRef<TextInput>(null);
 
   return (
-    <Box flex={1} bg="gray.24" p={4}>
+    <Box flex={1} bg="gray.24" p={4} safeArea>
       <Text>Swap Tab</Text>
     </Box>
   );
