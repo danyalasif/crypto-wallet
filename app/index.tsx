@@ -1,59 +1,26 @@
-import { Button, SafeAreaView, Text, TextInput, View } from "react-native";
-import { ApiPromise, WsProvider, Keyring } from "@polkadot/api";
-import { useRef, useState } from "react";
-import { Redirect } from "expo-router";
+import { useEffect } from "react";
+import { Redirect, SplashScreen } from "expo-router";
+import { useFonts } from "expo-font";
 
-async function main() {
-  // Initialise the provider to connect to the local node
-  const provider = new WsProvider("wss://westend-rpc.polkadot.io");
-
-  // Create the API and wait until ready
-  const api = await ApiPromise.create({ provider });
-
-  // Retrieve the chain & node information information via rpc calls
-  const [chain, nodeName, nodeVersion] = await Promise.all([
-    api.rpc.system.chain(),
-    api.rpc.system.name(),
-    api.rpc.system.version(),
-  ]);
-
-  console.log(
-    `You are connected to chain ${chain} using ${nodeName} v${nodeVersion}`
-  );
-
-  // const keyring = new Keyring({ type: "sr25519" });
-
-  // // Add the first account
-  // const account1 = keyring.addFromUri("//Alice");
-  // console.log(account1.address);
-}
-
-// main().catch(console.error);
+SplashScreen.preventAutoHideAsync();
 
 export default function Home() {
-  const [accountInfo, setAccountInfo] = useState<any>();
-  const [walletName, setWalletName] = useState("");
+  const [fontsLoaded] = useFonts({
+    Archivo: require("../assets/fonts/Archivo-VariableFont_wdth-wght.ttf"),
+  });
 
-  const inputRef = useRef<TextInput>(null);
+  useEffect(() => {
+    if (fontsLoaded) {
+      // Hide the splash screen after the fonts have loaded and the
+      // UI is ready.
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
-  const getAccountInfo = () => {
-    const keyring = new Keyring({ type: "sr25519" });
-    console.log({ inputRef: walletName });
-    const account1 = keyring.addFromUri(walletName);
+  // Prevent rendering until the font has loaded
+  if (!fontsLoaded) {
+    return null;
+  }
 
-    setAccountInfo(account1);
-  };
-  return <Redirect href="/dashboard" />;
-  return (
-    <SafeAreaView
-      style={{ padding: 32, justifyContent: "space-between", height: 600 }}
-    >
-      <Text>{accountInfo?.address}</Text>
-      <TextInput
-        placeholder="Enter Wallet Name"
-        onChangeText={(text) => setWalletName(text)}
-      />
-      <Button title="Get Wallet" onPress={getAccountInfo} />
-    </SafeAreaView>
-  );
+  return <Redirect href="/onboarding" />;
 }

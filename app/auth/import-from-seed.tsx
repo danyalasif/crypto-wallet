@@ -12,11 +12,27 @@ import {
   Switch,
   ScrollView,
   useTheme,
+  IconButton,
+  ArrowBackIcon,
 } from "native-base";
 import { useState } from "react";
 import { Animated } from "react-native";
-import { CustomInput } from "./components/input";
+import PrimaryButton from "../../ui/PrimaryButton";
 
+import { getKeyringFromSeed, initializeApi } from "ternoa-js";
+// import { getKeyringFromSeed } from "ternoa-js/account";
+// import { initializeApi } from "ternoa-js/blockchain";
+
+async function getAddress({ seed }: { seed: string }) {
+  // Construct
+  await initializeApi();
+  // Do something
+  const keyring = await getKeyringFromSeed(seed);
+  const address = keyring.address;
+  console.log("Your fresh public address is: ", address);
+
+  console.log("Api Connected");
+}
 export default function ImportFromSeed() {
   const router = useRouter();
   const { colors } = useTheme();
@@ -28,24 +44,11 @@ export default function ImportFromSeed() {
 
   const onSubmit = () => {
     console.log({ seedPhrase, password, confirmPassword });
+    getAddress({ seed: seedPhrase });
   };
 
   return (
     <Box safeArea flex={1} p={2} backgroundColor={"gray.24"}>
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerTitle: "Import From Seed",
-          headerTitleAlign: "center",
-          headerTitleStyle: {
-            color: "white",
-          },
-          headerStyle: {
-            backgroundColor: colors.gray[24],
-          },
-          headerBackTitle: "Back",
-        }}
-      />
       <ScrollView flex={1} p={2} w="90%" mx="auto">
         <VStack space={5} mt={5}>
           <FormControl isRequired>
@@ -66,7 +69,9 @@ export default function ImportFromSeed() {
               value={seedPhrase}
               borderRadius={16}
               color={"white"}
+              fontSize={"14px"}
               p={4}
+              lineHeight={"24px"}
               pt={seedPhrase.length ? 6 : 4}
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
@@ -114,19 +119,12 @@ export default function ImportFromSeed() {
             By proceeding, you agree to these{" "}
             <Link href={"/terms"}>Term and Conditions</Link>.
           </Text>
-          <Button
+          <PrimaryButton
             onPress={onSubmit}
-            borderRadius={80}
-            padding={4}
-            width={"100%"}
-            bgColor={"#FF56A9"}
-            _text={{
-              fontSize: "16px",
-              fontWeight: "bold",
-            }}
+            bgColor={password.length <= 0 && "gray.23"}
           >
             Import
-          </Button>
+          </PrimaryButton>
         </VStack>
       </ScrollView>
     </Box>

@@ -5,6 +5,12 @@
       "bundler": "metro"
     },
     "name": "crypto-wallet",
-    "slug": "crypto-wallet"
+    "slug": "crypto-wallet",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    }
   }
 }

@@ -25,11 +25,27 @@ const newColorTheme = {
   gray: {
     9: "#8FA2B7",
     21: "#202832",
+    23: "#101419",
     24: "#080A0C",
   },
   red: {
     5: "#EA3943",
   },
+};
+
+const fontConfig = {
+  Roboto: {
+    100: {
+      normal: "Archivo",
+      italic: "Archivo",
+    },
+  },
+};
+
+const fonts = {
+  heading: "Archivo",
+  body: "Archivo",
+  mono: "Archivo",
 };
 
 const config = {
@@ -38,7 +54,7 @@ const config = {
   },
 };
 
-const theme = extendTheme({ colors: newColorTheme });
+const theme = extendTheme({ colors: newColorTheme, fontConfig, fonts });
 
 export default function RootLayout() {
   return (

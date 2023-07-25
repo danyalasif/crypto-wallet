@@ -1,41 +1,28 @@
-import { SafeAreaView, View } from "react-native";
 import { useRef, useState } from "react";
 import PagerView from "react-native-pager-view";
-import { Image, Text, Box, Button } from "native-base";
+import { Image, Text, Box, View } from "native-base";
 import { useRouter } from "expo-router";
+import PrimaryButton from "../../ui/PrimaryButton";
+import { PaginationDots } from "../../ui/PaginationDots";
+import SecondaryButton from "../../ui/SecondaryButton";
 
-const PaginationDots = ({ totalPages, currentPage }) => {
-  const dots = [];
-
-  for (let i = 0; i < totalPages; i++) {
-    dots.push(
-      <View
-        key={i}
-        style={[
-          {
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            margin: 5,
-          },
-          { backgroundColor: i === currentPage ? "#384657" : "#3D8DFF" },
-        ]}
-      />
-    );
-  }
-
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {dots}
-    </View>
-  );
-};
+const Onboarding_Pages = [
+  {
+    key: "1",
+    image: require("../../images/bars.png"),
+    heading: "Property Diversity",
+  },
+  {
+    key: "2",
+    image: require("../../images/shield.png"),
+    heading: "Safe Security",
+  },
+  {
+    key: "3",
+    image: require("../../images/rocket.png"),
+    heading: "Convenient Transaction",
+  },
+];
 
 export default function Index() {
   const pagerRef = useRef<PagerView>();
@@ -47,7 +34,7 @@ export default function Index() {
   };
 
   return (
-    <Box safeArea background={"gray.24"} flex={1}>
+    <Box safeArea background={"gray.24"} flex={1} p={4} fontFamily={"Archivo"}>
       <PagerView
         ref={pagerRef}
         initialPage={0}
@@ -57,107 +44,38 @@ export default function Index() {
         orientation="horizontal"
         onPageSelected={handlePageSelected}
       >
-        <Box
-          key="1"
-          style={{
-            padding: 32,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Image
-            source={require("../../images/bars.png")}
-            alt="property"
-            style={{
-              height: 300,
-              width: 300,
-            }}
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 50,
-            }}
-          >
-            <Text color={"white"} fontSize={32}>
-              Property Diversity
-            </Text>
-          </View>
-        </Box>
-        <Box
-          key="2"
-          style={{
-            padding: 32,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Image
-            source={require("../../images/shield.png")}
-            alt="property"
-            style={{
-              height: 300,
-              width: 300,
-            }}
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 50,
-            }}
-          >
-            <Text color={"white"} fontSize={32}>
-              Safe Security
-            </Text>
-          </View>
-        </Box>
-        <Box
-          key="3"
-          style={{
-            padding: 32,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Image
-            source={require("../../images/rocket.png")}
-            alt="property"
-            style={{
-              height: 300,
-              width: 300,
-            }}
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 50,
-            }}
-          >
-            <Text color={"white"} fontSize={32}>
-              Convenient Transaction
-            </Text>
-          </View>
-        </Box>
+        {Onboarding_Pages.map((page, index) => {
+          return (
+            <Box
+              key={page.key}
+              justifyContent={"center"}
+              padding={4}
+              alignItems={"center"}
+            >
+              <Image
+                source={page.image}
+                alt={page.heading}
+                maxW={300}
+                maxH={300}
+              />
+              <Text color={"white"} fontSize={32}>
+                {page.heading}
+              </Text>
+            </Box>
+          );
+        })}
       </PagerView>
-      <Box marginX="auto">
-        <PaginationDots totalPages={3} currentPage={currentPage} />
+      <Box marginX="auto" paddingY={8}>
+        <PaginationDots
+          totalPages={Onboarding_Pages.length}
+          currentPage={currentPage}
+        />
       </Box>
-      <Button
-        borderRadius={80}
-        marginY={8}
-        width={"80%"}
-        marginX={"auto"}
-        bgColor={"#202832"}
-        onPress={() => router.replace("/auth")}
-      >
-        Get Started
-      </Button>
+      <Box width={"100%"}>
+        <SecondaryButton onPress={() => router.replace("auth")}>
+          Get Started
+        </SecondaryButton>
+      </Box>
     </Box>
   );
 }
