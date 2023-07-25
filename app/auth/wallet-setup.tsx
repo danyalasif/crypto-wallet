@@ -1,5 +1,7 @@
 import { useRouter } from "expo-router";
 import { Box, Image, Text, Button } from "native-base";
+import SecondaryButton from "../../ui/SecondaryButton";
+import PrimaryButton from "../../ui/PrimaryButton";
 
 export default function WalletSetup() {
   const router = useRouter();
@@ -33,26 +35,16 @@ export default function WalletSetup() {
         </Text>
       </Box>
 
-      <Box style={{ width: "100%" }} marginX={"auto"} alignItems={"center"}>
-        <Button
-          borderRadius={80}
-          padding={4}
-          marginY={8}
-          width={"80%"}
-          bgColor={"#202832"}
+      <Box width={"100%"} justifyContent={"space-between"} marginY={8}>
+        <SecondaryButton
           onPress={() => router.push("auth/import-from-seed")}
+          mb={4}
         >
           Import Using Seed Phrase
-        </Button>
-        <Button
-          borderRadius={80}
-          padding={4}
-          width={"80%"}
-          bgColor={"#FF56A9"}
-          onPress={() => router.push("auth/create-new-wallet")}
-        >
+        </SecondaryButton>
+        <PrimaryButton onPress={() => router.push("auth/create-new-wallet")}>
           Create a New Wallet
-        </Button>
+        </PrimaryButton>
       </Box>
     </Box>
   );
