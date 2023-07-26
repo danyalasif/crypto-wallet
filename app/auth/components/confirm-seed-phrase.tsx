@@ -3,18 +3,14 @@ import {
   Box,
   Text,
   HStack,
-  ArrowBackIcon,
   Heading,
   Progress,
   useTheme,
-  IconButton,
   Pressable,
   DeleteIcon,
-  Button,
 } from "native-base";
 import { useState } from "react";
 import React from "react";
-import GradientButton from "../../../ui/GradientButton";
 import SecondaryButton from "../../../ui/SecondaryButton";
 import PrimaryButton from "../../../ui/PrimaryButton";
 

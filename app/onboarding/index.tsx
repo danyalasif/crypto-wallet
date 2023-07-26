@@ -1,8 +1,7 @@
 import { useRef, useState } from "react";
 import PagerView from "react-native-pager-view";
-import { Image, Text, Box, View } from "native-base";
+import { Image, Text, Box } from "native-base";
 import { useRouter } from "expo-router";
-import PrimaryButton from "../../ui/PrimaryButton";
 import { PaginationDots } from "../../ui/PaginationDots";
 import SecondaryButton from "../../ui/SecondaryButton";
 

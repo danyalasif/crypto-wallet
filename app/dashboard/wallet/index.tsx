@@ -1,92 +1,83 @@
-import { ApiPromise, WsProvider, Keyring } from "@polkadot/api";
-import { useRef, useState } from "react";
-import {
-  Box,
-  Button,
-  HStack,
-  Heading,
-  IconButton,
-  InfoIcon,
-  Text,
-  ShareIcon,
-  VStack,
-  Icon,
-  ScrollView,
-  Pressable,
-} from "native-base";
+import { useState, useEffect } from "react";
+import { Box, Button, HStack, Heading, Text, ScrollView } from "native-base";
 import { ReceivedIcon } from "../../../ui/icons/ReceivedIcon";
 import { SentIcon } from "../../../ui/icons/SentIcon";
 import { useRouter } from "expo-router";
+import {
+  balanceToNumber,
+  getTotalBalance,
+  getRawApi,
+  initializeApi,
+} from "ternoa-js";
+import { useZustandStore } from "../../../store";
+import { getKCapsPriceInUSD } from "../../../helpers/api";
+import { convertKCapsToUSD } from "../../../helpers/methods";
+import { TransactionComponent } from "../components/transactionItem";
+import { ROUTES } from "../../../helpers/consts/routes";
 
-type TransactionStatus = "Confirmed" | "Cancelled";
-type TransactionType = "Sent" | "Received";
-
-type Transaction = {
-  status: TransactionStatus;
-  type: TransactionType;
-  amount: string;
-  date: string;
+const getBalance = async (publicAddress) => {
+  // console.log({ publicAddress });
+  try {
+    const totalBalanceBN = await getTotalBalance(publicAddress);
+    const totalBalance = balanceToNumber(totalBalanceBN);
+    // console.log(
+    //   `The total balance of ${publicAddress} is: ${totalBalance} and BN: ${totalBalanceBN}`
+    // );
+    return totalBalance;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
-const TransactionComponent = ({ status, type, amount, date }: Transaction) => {
-  const newDate = new Date();
-  const humanReadableDate = `${newDate.getUTCMonth()} ${newDate.getDay()} at ${newDate.getHours()}:${newDate.getMinutes()}:${newDate.getSeconds()}`;
-  const router = useRouter();
+const getTransactions = async (publicAddress: string) => {
+  const api = await getRawApi();
+  const latestBlockHash = await api.rpc.chain.getFinalizedHead();
+  const latestBlock = await api.rpc.chain.getBlock(latestBlockHash);
 
-  const openTransactionModal = () => {
-    router.push({
-      pathname: "dashboard/wallet/modal",
-      params: { status, type, amount, date },
-    });
-  };
+  const transactions = [];
 
-  return (
-    <Pressable onPress={openTransactionModal}>
-      <Box
-        bg="transparent"
-        p={4}
-        borderRadius={8}
-        justifyContent={"space-between"}
-        minW={"100%"}
-      >
-        <Text mb={2} color={"gray.9"}>
-          {humanReadableDate}
-        </Text>
-        <HStack>
-          {type === "Sent" ? (
-            <SentIcon size="2xl" fill="transparent" stroke={"white"} />
-          ) : (
-            <ReceivedIcon size="xl" stroke={"white"} fill="transparent" />
-          )}
+  latestBlock.block.extrinsics.forEach((extrinsic) => {
+    const { method, signer } = extrinsic;
+    if (signer.toString() === publicAddress) {
+      console.log(`Transaction: ${method.section}.${method.method}`);
+    }
+  });
 
-          <VStack ml={3}>
-            <Text fontSize={"16px"} color={"gray.9"}>
-              {type} BNB
-            </Text>
-            <Text color={status === "Confirmed" ? "green.5" : "red.5"}>
-              {status}
-            </Text>
-          </VStack>
-          <VStack ml={"auto"} alignItems={"flex-end"}>
-            <Text color={"white"}>{amount} BNB</Text>
-            <Text color={"gray.9"}>${53.23}</Text>
-          </VStack>
-        </HStack>
-      </Box>
-    </Pressable>
-  );
+  return transactions;
 };
 
 export default function Wallet() {
-  const [accountInfo, setAccountInfo] = useState<any>();
-  const [walletName, setWalletName] = useState("");
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [transactions, setTransactions] = useState<any>([]);
+  const { selectedPublicAddress, setGlobalState, balance, balanceInUSD } =
+    useZustandStore();
+
+  useEffect(() => {
+    const updateBalance = async () => {
+      setIsLoading(true);
+      await initializeApi();
+      const balance = await getBalance(selectedPublicAddress);
+      const exchangeRate = await getKCapsPriceInUSD();
+      const balanceInUSD = await convertKCapsToUSD(balance, exchangeRate);
+
+      const transactionsData = await getTransactions(selectedPublicAddress);
+      setTransactions(transactionsData);
+      setGlobalState({ balanceInUSD, balance, exchangeRate });
+      setIsLoading(false);
+    };
+
+    updateBalance();
+  }, [selectedPublicAddress]);
 
   return (
     <Box flex={1} p={4} safeArea alignItems={"center"}>
       <Heading color={"white"} fontSize={"40px"}>
-        19.2371 BNB
+        {balance}
       </Heading>
-      <Text color={"white"}>$4360.8569</Text>
+      <Text color={"white"} mt={4}>
+        ${balanceInUSD}
+      </Text>
 
       <HStack mt={12}>
         <Button
@@ -96,8 +87,9 @@ export default function Wallet() {
           borderRadius={80}
           mr={2}
           bg={"gray.21"}
+          onPress={() => router.push(ROUTES.SEND_TRANSACTION)}
         >
-          Sent
+          Send
         </Button>
         <Button
           leftIcon={
@@ -106,8 +98,9 @@ export default function Wallet() {
           borderRadius={80}
           ml={2}
           bg={"gray.21"}
+          onPress={() => router.push(ROUTES.RECIEVE_TRANSACTION)}
         >
-          Received
+          Receive
         </Button>
       </HStack>
 

@@ -2,9 +2,12 @@ import { useRouter } from "expo-router";
 import { Box, Image, Text, Button } from "native-base";
 import SecondaryButton from "../../ui/SecondaryButton";
 import PrimaryButton from "../../ui/PrimaryButton";
+import { useZustandStore } from "../../store";
+import { ROUTES } from "../../helpers/consts/routes";
 
 export default function WalletSetup() {
   const router = useRouter();
+  const { selectedPublicAddress } = useZustandStore();
 
   return (
     <Box
@@ -37,15 +40,23 @@ export default function WalletSetup() {
 
       <Box width={"100%"} justifyContent={"space-between"} marginY={8}>
         <SecondaryButton
-          onPress={() => router.push("auth/import-from-seed")}
+          onPress={() => router.push(ROUTES.IMPORT_FROM_SEED)}
           mb={4}
         >
           Import Using Seed Phrase
         </SecondaryButton>
-        <PrimaryButton onPress={() => router.push("auth/create-new-wallet")}>
+        <PrimaryButton onPress={() => router.push(ROUTES.CREATE_NEW_WALLET)}>
           Create a New Wallet
         </PrimaryButton>
       </Box>
+      {selectedPublicAddress && (
+        <SecondaryButton
+          w={"50%"}
+          onPress={() => router.replace(ROUTES.SETTINGS)}
+        >
+          Go back
+        </SecondaryButton>
+      )}
     </Box>
   );
 }

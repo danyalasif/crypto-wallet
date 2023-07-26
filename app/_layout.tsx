@@ -1,5 +1,4 @@
-import { Stack } from "expo-router/stack";
-import { Slot, SplashScreen } from "expo-router";
+import { Slot } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-gesture-handler";
 import { NativeBaseProvider, extendTheme } from "native-base";
@@ -24,12 +23,16 @@ const newColorTheme = {
   },
   gray: {
     9: "#8FA2B7",
+    12: "#6A84A0",
     21: "#202832",
     23: "#101419",
     24: "#080A0C",
   },
   red: {
     5: "#EA3943",
+  },
+  blue: {
+    5: "#5F97FF",
   },
 };
 

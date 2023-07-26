@@ -1,19 +1,35 @@
-import { Stack, usePathname } from "expo-router";
-import { useTheme } from "native-base";
+import { Stack, usePathname, useRouter } from "expo-router";
+import { ArrowBackIcon, IconButton, useTheme } from "native-base";
+import { ROUTES } from "../../../helpers/consts/routes";
 export default function WalletStack() {
   const { colors } = useTheme();
   const path = usePathname();
+  const router = useRouter();
   return (
-    <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
+    <Stack
+      initialRouteName="index"
+      screenOptions={{
+        headerTitleAlign: "center",
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: colors.gray[24],
+        },
+        headerTitleStyle: {
+          color: "white",
+        },
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{
+          title: "CAPS",
+          headerTitleAlign: "center",
           contentStyle: {
             backgroundColor:
-              path === "/dashboard/wallet/modal"
+              path === ROUTES.TRANSACTION_DETAILS
                 ? colors.gray[21]
                 : colors.gray[24],
-            opacity: path === "/dashboard/wallet/modal" ? 0.2 : 1,
+            opacity: path === ROUTES.TRANSACTION_DETAILS ? 0.2 : 1,
           },
         }}
       />
@@ -24,6 +40,7 @@ export default function WalletStack() {
           animation: "slide_from_bottom",
           animationDuration: 2000,
           headerTransparent: true,
+          headerShown: false,
           contentStyle: {
             position: "absolute",
             backgroundColor: "black",
@@ -32,6 +49,43 @@ export default function WalletStack() {
             width: "100%",
             height: "80%",
           },
+        }}
+      />
+      <Stack.Screen
+        name="receive-transaction"
+        options={{
+          headerTitle: "Receive",
+          contentStyle: {
+            backgroundColor: colors.gray[24],
+          },
+          headerLeft: () => (
+            <IconButton
+              icon={<ArrowBackIcon />}
+              onPress={() => router.back()}
+              _icon={{
+                color: "white",
+              }}
+            />
+          ),
+        }}
+      />
+
+      <Stack.Screen
+        name="send-transaction"
+        options={{
+          headerTitle: "Send",
+          contentStyle: {
+            backgroundColor: colors.gray[24],
+          },
+          headerLeft: () => (
+            <IconButton
+              icon={<ArrowBackIcon />}
+              onPress={() => router.back()}
+              _icon={{
+                color: "white",
+              }}
+            />
+          ),
         }}
       />
     </Stack>

@@ -1,10 +1,16 @@
-import { Tabs, useNavigation, useRouter, usePathname } from "expo-router";
-import Wallet from "./wallet";
+import { Tabs, usePathname } from "expo-router";
 import React from "react";
-import { SunIcon, Icon, useTheme, Box } from "native-base";
+import { useTheme } from "native-base";
 import { WalletIcon } from "../../ui/icons/WalletIcon";
 import { SwapIcon } from "../../ui/icons/SwapIcon";
 import { SettingsIcon } from "../../ui/icons/SettingsIcon";
+import { ROUTES } from "../../helpers/consts/routes";
+
+const hideTabsScreens = [
+  ROUTES.TRANSACTION_DETAILS,
+  ROUTES.SEND_TRANSACTION,
+  ROUTES.RECIEVE_TRANSACTION,
+];
 
 export default function DashboardTabLayout() {
   const { colors } = useTheme();
@@ -17,22 +23,26 @@ export default function DashboardTabLayout() {
         tabBarStyle: {
           height: 60,
           backgroundColor: colors.gray[24],
-          display: path === "/dashboard/wallet/modal" ? "none" : "flex",
+          display: hideTabsScreens.includes(path) ? "none" : "flex",
         },
         tabBarShowLabel: false,
         headerTitleAlign: "center",
         headerTitleStyle: { color: "white" },
-        headerTransparent: true,
+        headerStyle: {
+          backgroundColor: colors.gray[24],
+          borderBottomWidth: 0,
+          shadowColor: "#000",
+        },
       }}
       sceneContainerStyle={{
-        paddingTop: 80,
         backgroundColor: colors.gray[24],
       }}
     >
       <Tabs.Screen
         name="wallet"
         options={{
-          title: "Wallet",
+          title: "CAPS",
+          headerShown: false,
           tabBarIconStyle: {
             height: 50,
             width: 50,

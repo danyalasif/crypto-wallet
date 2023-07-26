@@ -1,12 +1,16 @@
 import { create, StateCreator } from "zustand";
 
-export interface AppDataSlice {
-  data: string;
-  setData: (val: string) => void;
+interface AppDataState {
+  [key: string]: any;
+}
+export interface AppDataActions {
+  setGlobalState: (data: AppDataState) => void;
+  clearGlobalState: () => void;
 }
 
-export const createAppDataSlice: StateCreator<AppDataSlice> = (set) => ({
-  data: "Test",
+export type AppDataSlice = AppDataState & AppDataActions;
 
-  setData: (val) => set(() => ({ data: val })),
+export const createAppDataSlice: StateCreator<AppDataSlice> = (set) => ({
+  setGlobalState: (data) => set((state) => ({ ...state, ...data })),
+  clearGlobalState: () => set({}),
 });

@@ -1,5 +1,4 @@
-import { Link, useNavigation, useRouter, useSearchParams } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+import { Link, useSearchParams } from "expo-router";
 import { Box, HStack, Heading, Text, VStack } from "native-base";
 export default function TransactionModal() {
   const params = useSearchParams();

@@ -1,24 +1,9 @@
 import { useRouter } from "expo-router";
-import {
-  Box,
-  Text,
-  HStack,
-  ArrowBackIcon,
-  Heading,
-  Progress,
-  useTheme,
-  IconButton,
-  Pressable,
-  DeleteIcon,
-  Button,
-  Image,
-} from "native-base";
-import { useState } from "react";
+import { Box, Text, Heading, useTheme, Image } from "native-base";
 import React from "react";
-import GradientButton from "../../../ui/GradientButton";
-import SecondaryButton from "../../../ui/SecondaryButton";
 import PrimaryButton from "../../../ui/PrimaryButton";
 import GradientText from "../../../ui/GradientText";
+import { ROUTES } from "../../../helpers/consts/routes";
 
 export const SuccessSeedPhrase = () => {
   const router = useRouter();
@@ -62,7 +47,7 @@ export const SuccessSeedPhrase = () => {
         phrase safe, it's your responsibility!
       </Text>
       <Box width={"100%"} mt={"auto"}>
-        <PrimaryButton onPress={() => router.push("/dashboard")}>
+        <PrimaryButton onPress={() => router.push(ROUTES.DASHBOARD)}>
           Go to Dashboard
         </PrimaryButton>
       </Box>

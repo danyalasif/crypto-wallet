@@ -11,7 +11,7 @@ import Svg, {
 export const SwapIcon = ({ fill, text }) => {
   return (
     <Center>
-      <Icon size="5xl" viewBox="0 0 35 35">
+      <Icon size="5xl" viewBox="0 0 35 35" translateX={5}>
         <Defs>
           <LinearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
             <Stop offset="0%" stopColor={"#8AD4EC"} stopOpacity={1} />

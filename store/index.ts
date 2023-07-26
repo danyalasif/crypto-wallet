@@ -4,10 +4,13 @@ import { createAppDataSlice, AppDataSlice } from "./dataSlice";
 import { createJSONStorage, persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const useStore = create<UserSlice>()(
+type MainSlice = UserSlice & AppDataSlice;
+
+export const useZustandStore = create<MainSlice>()(
   persist(
     (...a) => ({
       ...createUserSlice(...a),
+      ...createAppDataSlice(...a),
     }),
     {
       name: "crypto-wallet-store",

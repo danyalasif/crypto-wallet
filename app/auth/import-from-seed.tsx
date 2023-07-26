@@ -20,31 +20,45 @@ import { Animated } from "react-native";
 import PrimaryButton from "../../ui/PrimaryButton";
 
 import { getKeyringFromSeed, initializeApi } from "ternoa-js";
-// import { getKeyringFromSeed } from "ternoa-js/account";
-// import { initializeApi } from "ternoa-js/blockchain";
+import SecondaryButton from "../../ui/SecondaryButton";
+import { useZustandStore } from "../../store";
+import { ROUTES } from "../../helpers/consts/routes";
+
+// Import the details with the seed
+// Store the password and face id in secure storage
+// Go to settings screen, show the user public address there with a random image
+// Save the public address in store
+// Show the money in account
+// Show total CAPS
+// Get Transactions
 
 async function getAddress({ seed }: { seed: string }) {
-  // Construct
   await initializeApi();
-  // Do something
+
   const keyring = await getKeyringFromSeed(seed);
   const address = keyring.address;
   console.log("Your fresh public address is: ", address);
-
+  return address;
   console.log("Api Connected");
 }
 export default function ImportFromSeed() {
   const router = useRouter();
   const { colors } = useTheme();
+  const { updateAddressList } = useZustandStore();
   const [seedPhrase, setSeedPhrase] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isFocused, setFocused] = useState(false);
   const [isFaceIdEnabled, setFaceIdEnabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = () => {
-    console.log({ seedPhrase, password, confirmPassword });
-    getAddress({ seed: seedPhrase });
+  const onSubmit = async () => {
+    setIsLoading(true);
+    const address = await getAddress({ seed: seedPhrase });
+
+    updateAddressList(address);
+    setIsLoading(false);
+    router.push(ROUTES.DASHBOARD);
   };
 
   return (
@@ -56,7 +70,7 @@ export default function ImportFromSeed() {
               position={"absolute"}
               top={isFocused || seedPhrase.length ? 0 : 4}
               left={4}
-              color={"#6A84A0"}
+              color={"gray.12"}
               _text={{
                 fontSize: isFocused || seedPhrase.length ? "14px" : "16px",
               }}
@@ -83,9 +97,10 @@ export default function ImportFromSeed() {
             <Input
               onChangeText={setPassword}
               value={password}
+              color={"white"}
               placeholder="Password"
               type="password"
-              placeholderTextColor={"#6A84A0"}
+              placeholderTextColor={"gray.12"}
               borderRadius={16}
               p={4}
             />
@@ -95,8 +110,9 @@ export default function ImportFromSeed() {
             <Input
               onChangeText={setConfirmPassword}
               value={confirmPassword}
+              color={"white"}
               placeholder="Confirm Password"
-              placeholderTextColor={"#6A84A0"}
+              placeholderTextColor={"gray.12"}
               type="password"
               borderRadius={16}
               p={4}
@@ -112,19 +128,28 @@ export default function ImportFromSeed() {
             <Switch
               isChecked={isFaceIdEnabled}
               onToggle={setFaceIdEnabled}
-              onTrackColor={"#3D8DFF"}
+              onTrackColor={"primary.5"}
             />
           </HStack>
           <Text color={"white"}>
             By proceeding, you agree to these{" "}
             <Link href={"/terms"}>Term and Conditions</Link>.
           </Text>
-          <PrimaryButton
-            onPress={onSubmit}
-            bgColor={password.length <= 0 && "gray.23"}
-          >
-            Import
-          </PrimaryButton>
+          {password.length > 0 && confirmPassword.length > 0 ? (
+            <PrimaryButton
+              onPress={onSubmit}
+              bgColor={password.length <= 0 && "gray.23"}
+            >
+              Import
+            </PrimaryButton>
+          ) : (
+            <SecondaryButton
+              disabled
+              bgColor={password.length <= 0 && "gray.23"}
+            >
+              Import
+            </SecondaryButton>
+          )}
         </VStack>
       </ScrollView>
     </Box>

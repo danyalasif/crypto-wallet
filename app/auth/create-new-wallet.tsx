@@ -1,20 +1,16 @@
-import { Link, Stack, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import {
   Box,
   Image,
   Text,
   Button,
-  InputGroup,
   FormControl,
   Input,
   VStack,
   HStack,
   Switch,
-  ScrollView,
-  Circle,
   ArrowBackIcon,
   Checkbox,
-  Container,
   InfoIcon,
   Row,
   Heading,
@@ -23,14 +19,8 @@ import {
   IconButton,
 } from "native-base";
 import { useRef, useState } from "react";
-import { Animated, View } from "react-native";
 import PagerView from "react-native-pager-view";
-import { BlurView } from "expo-blur";
 import GradientButton from "../../ui/GradientButton";
-import { LinearGradient } from "expo-linear-gradient";
-import { fromCSS } from "@bacons/css-to-expo-linear-gradient";
-import MaskedView from "@react-native-masked-view/masked-view";
-import GradientText from "../../ui/GradientText";
 import React from "react";
 import PrimaryButton from "../../ui/PrimaryButton";
 import { HeaderProgress } from "../../ui/HeaderProgress";
