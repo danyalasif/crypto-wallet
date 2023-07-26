@@ -118,25 +118,25 @@ export default function Wallet() {
           status={"Confirmed"}
           type={"Sent"}
           amount={"0.001"}
-          date={"12/12/2021"}
+          date={"2023-07-25T10:03:00Z"}
         />
         <TransactionComponent
           status={"Cancelled"}
           type={"Received"}
           amount={"0.001"}
-          date={"12/12/2021"}
+          date={"2023-07-25T10:03:00Z"}
         />
         <TransactionComponent
           status={"Cancelled"}
           type={"Received"}
           amount={"0.001"}
-          date={"12/12/2021"}
+          date={"2023-07-25T10:03:00Z"}
         />
         <TransactionComponent
           status={"Cancelled"}
           type={"Received"}
           amount={"0.001"}
-          date={"12/12/2021"}
+          date={"2023-07-25T10:03:00Z"}
         />
       </ScrollView>
     </Box>

@@ -4,6 +4,7 @@ import { Box, HStack, Pressable, VStack, Text } from "native-base";
 import { ReceivedIcon } from "../../../ui/icons/ReceivedIcon";
 import { SentIcon } from "../../../ui/icons/SentIcon";
 import { ROUTES } from "../../../helpers/consts/routes";
+import { formatDate } from "../../../helpers/methods";
 
 export const TransactionComponent = ({
   status,
@@ -12,7 +13,6 @@ export const TransactionComponent = ({
   date,
 }: Transaction) => {
   const newDate = new Date();
-  const humanReadableDate = `${newDate.getUTCMonth()} ${newDate.getDay()} at ${newDate.getHours()}:${newDate.getMinutes()}:${newDate.getSeconds()}`;
   const router = useRouter();
 
   const openTransactionModal = () => {
@@ -32,7 +32,7 @@ export const TransactionComponent = ({
         minW={"100%"}
       >
         <Text mb={2} color={"gray.9"}>
-          {humanReadableDate}
+          {formatDate(date)}
         </Text>
         <HStack>
           {type === "Sent" ? (
