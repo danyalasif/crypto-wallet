@@ -25,6 +25,7 @@ import { truncateTextFromMiddle } from "../../../helpers/methods";
 import PrimaryButton from "../../../ui/PrimaryButton";
 import PagerView from "react-native-pager-view";
 import { ROUTES } from "../../../helpers/consts/routes";
+import * as SecureStore from "expo-secure-store";
 
 export default function SendTransaction() {
   const pagerRef = useRef<PagerView>();
@@ -42,9 +43,8 @@ export default function SendTransaction() {
 
   const transferAmount = async () => {
     const api = await getRawApi();
-    const keyring = await getKeyringFromSeed(
-      "spawn uphold clap reopen pass noise rent rose tail pass tragic medal"
-    );
+    const seed = await SecureStore.getItemAsync("USER_SEED");
+    const keyring = await getKeyringFromSeed(seed);
     try {
       setIsTransferingBalance(true);
       const res = await balancesTransfer(
@@ -78,9 +78,9 @@ export default function SendTransaction() {
 
     const getNetworkFee = async ({ toAddress, fromAddress }) => {
       const api = await getRawApi();
-      const keyring = await getKeyringFromSeed(
-        "spawn uphold clap reopen pass noise rent rose tail pass tragic medal"
-      );
+      const seed = await SecureStore.getItemAsync("USER_SEED");
+
+      const keyring = await getKeyringFromSeed(seed);
       const info = await api.tx.balances
         .transfer(toAddress, sendAmount)
         .paymentInfo(fromAddress);

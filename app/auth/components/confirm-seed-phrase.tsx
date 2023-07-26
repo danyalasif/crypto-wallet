@@ -13,8 +13,10 @@ import { useState } from "react";
 import React from "react";
 import SecondaryButton from "../../../ui/SecondaryButton";
 import PrimaryButton from "../../../ui/PrimaryButton";
+import { useZustandStore } from "../../../store";
+import { getKeyringFromSeed } from "ternoa-js";
 
-export const ConfirmSeedPhrase = ({ seedWords }) => {
+export const ConfirmSeedPhrase = ({ seedWords, onPress }) => {
   const router = useRouter();
   const { colors } = useTheme();
 
@@ -22,14 +24,18 @@ export const ConfirmSeedPhrase = ({ seedWords }) => {
   const [currentWord, setCurrentWord] = useState("");
   const [isMatch, setIsMatch] = useState(false);
   const [isWrongMatch, setIsWrongMatch] = useState(false);
+  const { updateAddressList } = useZustandStore();
 
   const hasSelectedAllWords = selectedWords.length === seedWords.length;
 
-  const matchSeed = () => {
+  const matchSeed = async () => {
     const seedString = seedWords.join(" ");
     const selectedSeedString = selectedWords.join(" ");
 
     if (seedString === selectedSeedString) {
+      const keyring = await getKeyringFromSeed(seedString);
+
+      updateAddressList(keyring.address);
       setIsMatch(true);
     } else {
       setTimeout(() => {
@@ -88,6 +94,7 @@ export const ConfirmSeedPhrase = ({ seedWords }) => {
         {seedWords.map((_, i) => {
           return (
             <Progress
+              key={i}
               _filledTrack={{
                 bg: i < selectedWords.length ? "primary.5" : "gray.21",
               }}
@@ -114,6 +121,7 @@ export const ConfirmSeedPhrase = ({ seedWords }) => {
         {seedWords.map((word, i) => {
           return (
             <Pressable
+              key={word + i}
               onPress={() => {
                 // Show the current word for 2 seconds then move on
                 setCurrentWord(word);
@@ -145,7 +153,7 @@ export const ConfirmSeedPhrase = ({ seedWords }) => {
 
       <Box width={"100%"} mt={"auto"}>
         {isMatch ? (
-          <PrimaryButton onPress={() => {}}>Next</PrimaryButton>
+          <PrimaryButton onPress={onPress}>Next</PrimaryButton>
         ) : (
           <SecondaryButton
             onPress={matchSeed}

@@ -4,17 +4,19 @@ export interface UserSlice {
   data: string;
   selectedPublicAddress: string;
   addressList: string[];
-  updateAddressList: (val: string) => void;
+  publicKey: string;
 
+  updateAddressList: (val: string) => void;
   setPublicAddress: (val: string) => void;
   setData: (val: string) => void;
   clearUserStore: () => void;
+  setPublicKey: (val: string) => void;
 }
 
 const initialState = {
   data: "Test",
   selectedPublicAddress: "",
-
+  publicKey: "",
   addressList: [],
 };
 
@@ -35,6 +37,7 @@ export const createUserSlice: StateCreator<UserSlice> = (set) => ({
         selectedPublicAddress: val,
       };
     }),
+  setPublicKey: (val) => set(() => ({ publicKey: val })),
 
   clearUserStore: () => set(() => ({ ...initialState })),
 });

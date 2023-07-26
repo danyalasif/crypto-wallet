@@ -14,6 +14,7 @@ import { getKCapsPriceInUSD } from "../../../helpers/api";
 import { convertKCapsToUSD } from "../../../helpers/methods";
 import { TransactionComponent } from "../components/transactionItem";
 import { ROUTES } from "../../../helpers/consts/routes";
+import { ActivityIndicator } from "react-native";
 
 const getBalance = async (publicAddress) => {
   // console.log({ publicAddress });
@@ -35,9 +36,11 @@ const getTransactions = async (publicAddress: string) => {
   const latestBlock = await api.rpc.chain.getBlock(latestBlockHash);
 
   const transactions = [];
+  console.log({ latestBlock, latestBlockHash });
 
   latestBlock.block.extrinsics.forEach((extrinsic) => {
     const { method, signer } = extrinsic;
+    console.log(signer.toString());
     if (signer.toString() === publicAddress) {
       console.log(`Transaction: ${method.section}.${method.method}`);
     }
@@ -72,12 +75,18 @@ export default function Wallet() {
 
   return (
     <Box flex={1} p={4} safeArea alignItems={"center"}>
-      <Heading color={"white"} fontSize={"40px"}>
-        {balance}
-      </Heading>
-      <Text color={"white"} mt={4}>
-        ${balanceInUSD}
-      </Text>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <>
+          <Heading color={"white"} fontSize={"40px"}>
+            {balance}
+          </Heading>
+          <Text color={"white"} mt={4}>
+            ${balanceInUSD}
+          </Text>
+        </>
+      )}
 
       <HStack mt={12}>
         <Button

@@ -4,13 +4,9 @@ import {
   Image,
   Text,
   Button,
-  FormControl,
-  Input,
   VStack,
   HStack,
-  Switch,
   ArrowBackIcon,
-  Checkbox,
   InfoIcon,
   Row,
   Heading,
@@ -22,44 +18,33 @@ import { useRef, useState } from "react";
 import PagerView from "react-native-pager-view";
 import GradientButton from "../../ui/GradientButton";
 import React from "react";
-import PrimaryButton from "../../ui/PrimaryButton";
 import { HeaderProgress } from "../../ui/HeaderProgress";
 import { EyeIcon } from "../../ui/icons/EyeIcon";
 import { ConfirmSeedPhrase } from "./components/confirm-seed-phrase";
 import { SuccessSeedPhrase } from "./components/success-seed-phrase";
+import { CreatePassword } from "./components/create-password";
+import { generateSeed } from "ternoa-js/account";
 
 const TOTAL_PAGES = 6;
-const SEED = "test ";
-
-const SEED_WORDS = SEED.split(" ");
 
 export default function CreateNewWallet() {
   const router = useRouter();
   const { colors } = useTheme();
-  const [seedPhrase, setSeedPhrase] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isFocused, setFocused] = useState(false);
-  const [isFaceIdEnabled, setFaceIdEnabled] = useState(false);
   const pagerRef = useRef<PagerView>();
   const [currentPage, setCurrentPage] = useState(0);
   const [isBlurred, setIsBlurred] = useState(true);
+  const [SEED, setSEED] = useState(() => generateSeed());
 
   const handlePageSelected = (e) => {
     setCurrentPage(e.nativeEvent.position);
-  };
-
-  const onSubmit = () => {
-    console.log({ seedPhrase, password, confirmPassword });
   };
 
   const goToNextPage = () => {
     pagerRef.current.setPage(currentPage + 1);
   };
 
-  const goToPreviousPage = () => {
-    pagerRef.current.setPage(currentPage - 1);
-  };
+  const SEED_WORDS = SEED.split(" ");
+  console.log({ SEED });
 
   return (
     <>
@@ -100,73 +85,10 @@ export default function CreateNewWallet() {
         }}
         orientation="horizontal"
         onPageSelected={handlePageSelected}
+        scrollEnabled={false}
       >
         <Box key="1" p={4} alignItems="center" justifyContent="center">
-          <Box alignItems={"center"} mt={5} p={5}>
-            <Text color="#70A2FF" fontSize={"16px"} fontWeight={"bold"} mb={2}>
-              Create Password
-            </Text>
-            <Text color="white" textAlign={"center"}>
-              This password will unlock your Metamask wallet only on this
-              service
-            </Text>
-          </Box>
-
-          <VStack space={5} mt={5} width={"100%"}>
-            <FormControl isRequired>
-              <Input
-                onChangeText={setPassword}
-                value={password}
-                placeholder="New Password"
-                type="password"
-                placeholderTextColor={"#6A84A0"}
-                borderRadius={16}
-                p={4}
-                color={"white"}
-              />
-            </FormControl>
-
-            <FormControl isRequired>
-              <Input
-                onChangeText={setConfirmPassword}
-                value={confirmPassword}
-                placeholder="Confirm Password"
-                placeholderTextColor={"#6A84A0"}
-                type="password"
-                borderRadius={16}
-                p={4}
-                color={"white"}
-              />
-            </FormControl>
-            <HStack
-              space={2}
-              alignItems="center"
-              justifyContent="space-between"
-              mt={4}
-            >
-              <Text color="white">Sign in with Face ID?</Text>
-              <Switch
-                isChecked={isFaceIdEnabled}
-                onToggle={setFaceIdEnabled}
-                onTrackColor={"primary.5"}
-              />
-            </HStack>
-            <HStack space={6}>
-              <Checkbox
-                value="test"
-                accessibilityLabel="Checkbox"
-                _text={{
-                  color: "white",
-                }}
-              >
-                I understand that DeGe cannot recover this password for me.
-                Learn more
-              </Checkbox>
-            </HStack>
-            <PrimaryButton onPress={goToNextPage}>
-              Create Password
-            </PrimaryButton>
-          </VStack>
+          <CreatePassword onPress={goToNextPage} />
         </Box>
 
         <Box key="2" p={4} alignItems="center" justifyContent="center">
@@ -396,7 +318,7 @@ export default function CreateNewWallet() {
           </Box>
         </Box>
         <Box key="5" p={4} alignItems={"center"}>
-          <ConfirmSeedPhrase seedWords={SEED_WORDS} />
+          <ConfirmSeedPhrase seedWords={SEED_WORDS} onPress={goToNextPage} />
         </Box>
         <Box key="6" p={4} alignItems={"center"}>
           <SuccessSeedPhrase />
